@@ -6,6 +6,8 @@
 import React from 'react'
 import { auth, signIn, signOut } from '@/auth'
 import { Button } from '@/components/ui/button'
+import { LogOut, LogIn } from 'lucide-react'
+
 const LoginBtn = async () => {
   const session = await auth()
   return (
@@ -17,8 +19,14 @@ const LoginBtn = async () => {
             await signOut({ redirectTo: '/' })
           }}
         >
-          <Button className="fixed top-0 right-0 z-50" variant="ghost">
-            {session?.user?.username},登出
+          <Button
+            className="fixed top-4 right-4 z-50 bg-teal-500/90 text-white hover:bg-teal-600 shadow-md hover:shadow-lg transition-all px-4 rounded-full border border-teal-400 backdrop-blur-sm"
+            variant="default"
+          >
+            <div className="flex items-center gap-2">
+              <span>{session?.user?.username}</span>
+              <LogOut size={16} />
+            </div>
           </Button>
         </form>
       ) : (
@@ -28,8 +36,14 @@ const LoginBtn = async () => {
             await signIn('github')
           }}
         >
-          <Button className="fixed top-0 right-0 z-50" variant="ghost">
-            登录
+          <Button
+            className="fixed top-4 right-4 z-50 bg-teal-500/90 text-white hover:bg-teal-600 shadow-md hover:shadow-lg transition-all px-4 rounded-full border border-teal-400 backdrop-blur-sm"
+            variant="default"
+          >
+            <div className="flex items-center gap-2">
+              <LogIn size={16} />
+              <span>开始旅程</span>
+            </div>
           </Button>
         </form>
       )}
