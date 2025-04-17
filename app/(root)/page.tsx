@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 13:31:58
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-14 18:05:12
+ * @LastEditTime: 2025-04-16 14:12:49
  */
 'use client'
 import { useChat } from '@ai-sdk/react'
@@ -21,6 +21,7 @@ const Home = () => {
   return (
     <>
       <Welcome />
+
       <div className="mt-10 mb-40">
         {messages.map((message, index) => {
           if (message.role === 'user') {

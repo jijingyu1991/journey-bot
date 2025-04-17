@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 17:51:08
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-15 13:48:44
+ * @LastEditTime: 2025-04-15 15:03:19
  */
 import aiModel from '@/ai/aiModel'
 import { LanguageModelV1, streamText } from 'ai'
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const result = streamText({
       model: aiModel as LanguageModelV1,
       system: travelGeneratePrompt,
-      maxSteps: 3,
+      maxSteps: 5,
       messages,
       // 这里我们必须使用as any，因为类型系统无法正确处理MCP工具的类型
       // 但我们知道高德地图的MCP返回的工具是符合ToolSet格式的
