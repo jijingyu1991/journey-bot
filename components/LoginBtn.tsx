@@ -1,14 +1,13 @@
 /*
  * @Date: 2025-04-16 16:14:07
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 10:16:50
+ * @LastEditTime: 2025-04-17 13:58:51
  */
 import React from 'react'
 import { auth, signIn, signOut } from '@/auth'
 import { Button } from '@/components/ui/button'
 const LoginBtn = async () => {
   const session = await auth()
-  console.log('session', session)
   return (
     <>
       {session ? (
