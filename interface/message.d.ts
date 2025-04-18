@@ -6,6 +6,7 @@
 export interface MessageProps {
   content: string
   id: string
+  chatId: string
   revisionId: string
   role: 'user' | 'assistant' | 'system'
   createdAt: unknown

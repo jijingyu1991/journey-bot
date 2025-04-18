@@ -1,11 +1,11 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 14:45:47
+ * @LastEditTime: 2025-04-18 15:43:33
  */
 import { Collection, Db } from 'mongodb'
 import clientPromise from '../../mongodb'
-import { Chat } from './schema'
+import { Chat, Message } from './schema'
 import { nanoid } from 'nanoid'
 
 // 获取Chat集合
@@ -27,6 +27,7 @@ export async function createChat(userId: number, title?: string): Promise<Chat> 
     createdAt: now,
     updatedAt: now,
     isArchived: false,
+    messages: [], // 初始化为空数组
   }
 
   await chatsCollection.insertOne(chat)
@@ -59,6 +60,19 @@ export async function updateChat(
         ...updates,
         updatedAt: new Date(),
       },
+    }
+  )
+  return result.modifiedCount > 0
+}
+
+// 向聊天添加消息
+export async function addMessageToChat(chatId: string, message: Message): Promise<boolean> {
+  const chatsCollection = await getChatsCollection()
+  const result = await chatsCollection.updateOne(
+    { id: chatId },
+    {
+      $push: { messages: message },
+      $set: { updatedAt: new Date() },
     }
   )
   return result.modifiedCount > 0

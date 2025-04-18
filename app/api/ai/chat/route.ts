@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 17:51:08
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 11:43:44
+ * @LastEditTime: 2025-04-18 16:38:05
  */
 import aiModel from '@/ai/aiModel'
 import { LanguageModelV1, streamText } from 'ai'
@@ -47,9 +47,6 @@ export async function POST(request: Request) {
         await Promise.all([amapClient?.close()])
       },
     })
-    for await (const textPart of result.textStream) {
-      console.log(textPart)
-    }
     const response = result.toDataStreamResponse({
       sendReasoning: true,
       getErrorMessage: (error) => {

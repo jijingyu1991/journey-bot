@@ -1,12 +1,11 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17
+ * @LastEditTime: 2025-04-18 16:11:26
  */
 
 import { getMongoClient } from '../mongodb'
 import { ChatSchema } from './chats'
-import { MessageSchema } from './messages'
 import { UserSchema } from './users'
 
 // 创建db对象，包含所有模型
@@ -66,4 +65,4 @@ export const db = {
 }
 
 // 导出其他模型
-export { ChatSchema, MessageSchema, UserSchema }
+export { ChatSchema, UserSchema }

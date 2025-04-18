@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16 16:14:07
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 13:58:51
+ * @LastEditTime: 2025-04-18 11:27:43
  */
 import React from 'react'
 import { auth, signIn, signOut } from '@/auth'
@@ -33,7 +33,7 @@ const LoginBtn = async () => {
         <form
           action={async () => {
             'use server'
-            await signIn('github')
+            await signIn('github', { redirectTo: '/chat' })
           }}
         >
           <Button
