@@ -1,11 +1,11 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 15:17:27
+ * @LastEditTime: 2025-04-21 11:33:33
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
-import { getUserChats } from '@/lib/services/chatService'
+import { getChatsByUserId } from '@/lib/db/chats'
 
 // 获取聊天列表
 export async function GET() {
@@ -21,7 +21,7 @@ export async function GET() {
     console.log('查询', userId)
 
     // 从数据库获取该用户的聊天列表
-    const chats = await getUserChats(Number(userId))
+    const chats = await getChatsByUserId(Number(userId))
 
     return NextResponse.json(chats)
   } catch (error) {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:26:39
+ * @LastEditTime: 2025-04-21 16:27:38
  */
 'use client'
 
@@ -13,14 +13,18 @@ import { useActiveChat } from '@/store/chat'
 import type { MessageProps } from '@/interface/message.d.ts'
 import UserMessage from '@/components/UserMessage'
 import AssistantMessage from '@/components/AssistantMessage'
+import type { Chat } from '@/components/ChatList'
 
 // 定义消息
 
 export default function ChatPage() {
-  const { activeChat } = useActiveChat()
+  const { activeChat, setActiveChat } = useActiveChat()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
+  const [chats, setChats] = useState<Chat[]>([])
+  const [listLoading, setListLoading] = useState(true)
+  const [listError, setListError] = useState('')
 
   // 添加滚动到底部的函数
   const scrollToBottom = () => {
@@ -36,6 +40,29 @@ export default function ChatPage() {
   const chatInputStatus = useMemo(() => {
     return status === 'loading' ? 'streaming' : 'ready'
   }, [status])
+
+  const fetchChats = useCallback(async () => {
+    try {
+      setListLoading(true)
+      const response = await fetch('/api/chat/list')
+
+      if (!response.ok) {
+        throw new Error('获取聊天列表失败')
+      }
+
+      const data = await response.json()
+      setChats(data)
+      if (data.length > 0) {
+        setActiveChat(data[0].id, data[0].title)
+      }
+    } catch (err) {
+      setListError(err instanceof Error ? err.message : '获取聊天列表失败')
+      console.error('获取聊天列表错误:', err)
+    } finally {
+      console.log('获取聊天列表完成')
+      setListLoading(false)
+    }
+  }, [setActiveChat])
 
   // 获取聊天消息的函数
   const fetchChatMessages = useCallback(async () => {
@@ -64,14 +91,14 @@ export default function ChatPage() {
     fetchChatMessages()
   }, [fetchChatMessages])
 
+  useEffect(() => {
+    fetchChats()
+  }, [fetchChats])
+
   // 处理发送消息
   const handleSend = useCallback(
     async (inputValue: string) => {
       if (!inputValue.trim()) return
-      if (!activeChat || !activeChat.id) {
-        console.error('没有选择聊天')
-        return
-      }
 
       try {
         // 更新状态
@@ -156,12 +183,16 @@ export default function ChatPage() {
         setStatus('idle')
 
         // 消息处理完成后刷新消息列表，确保显示最新的数据库记录
+        console.log('刷新消息列表')
         setTimeout(() => {
           fetchChatMessages()
+          if (!activeChat.title || activeChat?.title === '新对话') {
+            fetchChats()
+          }
         }, 500) // 添加少量延迟，确保数据库操作完成
       }
     },
-    [activeChat, messages, fetchChatMessages]
+    [activeChat, messages, fetchChatMessages, fetchChats]
   )
 
   // 更新助手消息内容（用于流式内容）
@@ -178,6 +209,7 @@ export default function ChatPage() {
       return newMessages
     })
   }
+  console.log('messages', messages)
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-teal-50 to-blue-50">
@@ -188,7 +220,7 @@ export default function ChatPage() {
             <MessageCircle className="mr-2 text-teal-500" size={20} /> JBot
           </h2>
         </div>
-        <ChatList />
+        <ChatList chats={chats} loading={listLoading} error={listError} fetchChats={fetchChats} />
       </div>
 
       {/* 右侧消息区域 */}

@@ -1,48 +1,30 @@
 /*
  * @Date: 2025-04-17 14:09:33
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:46:37
+ * @LastEditTime: 2025-04-21 16:01:56
  */
-import React, { useEffect, useState } from 'react'
+import React, { memo } from 'react'
 import { format } from 'date-fns'
 import { PlusIcon, Compass, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useActiveChat } from '@/store/chat'
 // 定义聊天项的类型
-interface Chat {
+export interface Chat {
   id: string
   title: string
   createdAt: string
   updatedAt: string
 }
+interface ChatListProps {
+  chats: Chat[]
+  loading: boolean
+  error: string
+  fetchChats: () => void
+}
 
-const ChatList: React.FC = () => {
+const ChatList: React.FC<ChatListProps> = memo(({ chats, loading, error, fetchChats }) => {
+  console.log('chats', chats)
   const { activeChat, setActiveChat } = useActiveChat()
-  const [chats, setChats] = useState<Chat[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  const fetchChats = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch('/api/chat/list')
-
-      if (!response.ok) {
-        throw new Error('获取聊天列表失败')
-      }
-
-      const data = await response.json()
-      setChats(data)
-      if (data.length > 0) {
-        setActiveChat(data[0].id, data[0].title)
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '获取聊天列表失败')
-      console.error('获取聊天列表错误:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   // 处理点击聊天项
   const handleChatClick = (chatId: string, title: string) => {
@@ -69,12 +51,7 @@ const ChatList: React.FC = () => {
       console.error('创建聊天会话失败:', error)
     }
   }
-
-  // 获取聊天列表
-  useEffect(() => {
-    fetchChats()
-  }, [])
-
+  console.log(loading)
   if (loading) {
     return (
       <div className="flex justify-center p-4 text-teal-500">
@@ -130,6 +107,8 @@ const ChatList: React.FC = () => {
       </Button>
     </div>
   )
-}
+})
+
+ChatList.displayName = 'ChatList'
 
 export default ChatList

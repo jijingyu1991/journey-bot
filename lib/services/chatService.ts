@@ -1,18 +1,12 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:09:54
+ * @LastEditTime: 2025-04-21 11:33:48
  */
-import { createChat, getChatById, getChatsByUserId, addMessageToChat } from '../db/chats'
+import { createChat, getChatById, addMessageToChat } from '../db/chats'
 import { MessageProps } from '@/interface/message'
 import { nanoid } from 'nanoid'
 import { Message } from '../db/chats/schema'
-
-// 为当前对话创建一个新的聊天会话
-export async function startNewChat(userId: number): Promise<string> {
-  const chat = await createChat(userId)
-  return chat.id
-}
 
 // 向聊天添加新消息
 export async function addMessageToChatSession(
@@ -66,10 +60,4 @@ export async function getChatMessages(chatId: string): Promise<MessageProps[]> {
 
   // 如果没有消息，返回空数组
   return []
-}
-
-// 获取用户的所有聊天会话
-export async function getUserChats(userId: number) {
-  const chats = await getChatsByUserId(userId)
-  return chats
 }

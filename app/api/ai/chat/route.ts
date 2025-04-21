@@ -28,8 +28,8 @@ export async function POST(request: Request) {
     const result = streamText({
       model: aiModel as LanguageModelV1,
       system: travelGeneratePrompt,
-      maxSteps: 5,
       messages,
+      maxSteps: 5,
       // 这里我们必须使用as any，因为类型系统无法正确处理MCP工具的类型
       // 但我们知道高德地图的MCP返回的工具是符合ToolSet格式的
       // @ts-expect-error MCP工具类型与ToolSet不完全兼容

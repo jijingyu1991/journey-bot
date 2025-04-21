@@ -5,33 +5,68 @@ import { auth } from '@/auth'
 import { travelGeneratePrompt } from '@/ai/travelGenerate'
 import { addMessageToChatSession } from '@/lib/services/chatService'
 import { nanoid } from 'nanoid'
+import { generateChatTitle } from '@/lib/services/aiService'
+import { createAmapClient } from '@/ai/amapMcp'
+import { mcpClient } from '@/ai/amapMcp'
+import { withTimeout } from '@/lib/utils'
+import { createChat } from '@/lib/db/chats'
 
 /*
  * @Date: 2025-04-18 10:27:00
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:15:26
+ * @LastEditTime: 2025-04-21 14:06:13
  */
 export async function POST(request: Request) {
+  let amapClient: mcpClient | null = null
   try {
     const session = await auth()
     if (!session || !session.user) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 })
     }
-    const { messages, chatId } = await request.json()
+    const { messages, chatId: initialChatId } = await request.json()
+    const userId = session.user.id
+    let chatId = initialChatId
     if (!chatId) {
-      return NextResponse.json({ error: '聊天ID不存在' }, { status: 400 })
+      const { id } = await createChat(Number(userId))
+      chatId = id
     }
-
     // 保存用户消息到数据库
     const userMessage = messages[messages.length - 1]
     const revisionId = nanoid()
-    await addMessageToChatSession(chatId, userMessage.content, 'user', revisionId)
+    addMessageToChatSession(chatId, userMessage.content, 'user', revisionId)
 
+    // 生成聊天标题
+    generateChatTitle(chatId, messages)
+
+    // 创建MCP客户端并获取工具
+    amapClient = await createAmapClient()
+    const mcpTools = await withTimeout(
+      amapClient.tools(),
+      5000, // 5秒获取工具超时
+      '获取MCP工具列表超时'
+    )
     // 调用模型获取流式响应
     const result = streamText({
       model: aiModel as LanguageModelV1,
       system: travelGeneratePrompt,
       messages,
+      maxSteps: 5,
+      // 这里我们必须使用as any，因为类型系统无法正确处理MCP工具的类型
+      // 但我们知道高德地图的MCP返回的工具是符合ToolSet格式的
+      // @ts-expect-error MCP工具类型与ToolSet不完全兼容
+      tools: mcpTools,
+      toolChoice: 'auto',
+      // 添加错误处理和修复工具调用逻辑
+      experimental_repairToolCall: async ({ toolCall, error }) => {
+        console.warn(`尝试修复工具调用: ${toolCall.toolName}`, error)
+        return null
+      },
+      // 在所有步骤完成后触发
+      onFinish: async () => {
+        console.log('所有步骤已完成，开始关闭MCP客户端')
+        // 在所有步骤完成后延迟关闭客户端，避免在工具调用期间关闭
+        await Promise.all([amapClient?.close()])
+      },
     })
 
     // 构建响应
@@ -47,10 +82,9 @@ export async function POST(request: Request) {
         controller.close()
 
         // 保存模型响应到数据库
-        await addMessageToChatSession(chatId, assistantResponse, 'assistant', nanoid())
+        addMessageToChatSession(chatId, assistantResponse, 'assistant', nanoid())
       },
     })
-
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
