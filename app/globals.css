@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 /* @import "tw-animate-css"; */
 
 @custom-variant dark (&:is(.dark *));
@@ -242,4 +242,25 @@ body {
 .ant-bubble-header {
   color: #999 !important;
   font-size: 12px !important;
+}
+
+/* SVG容器样式 */
+.svg-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px 0;
+  background-color: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.svg-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 在深色模式下调整SVG背景 */
+.dark .svg-container {
+  background-color: var(--sidebar);
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 13:31:58
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:38:34
+ * @LastEditTime: 2025-04-27 16:35:07
  */
 'use client'
 import { useChat } from '@ai-sdk/react'
@@ -13,7 +13,7 @@ import { useEffect, useRef } from 'react'
 
 const Home = () => {
   const { messages, input, status, setInput, handleSubmit } = useChat({
-    api: '/api/ai/chat',
+    api: '/api/ai/image',
     onResponse: (response) => {
       console.log('response', response)
     },

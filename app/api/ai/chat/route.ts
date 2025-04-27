@@ -1,11 +1,11 @@
 /*
  * @Date: 2025-04-10 17:51:08
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 16:38:05
+ * @LastEditTime: 2025-04-27 16:23:54
  */
 import aiModel from '@/ai/aiModel'
 import { LanguageModelV1, streamText } from 'ai'
-import { travelGeneratePrompt } from '@/ai/travelGenerate'
+import { travelGeneratePrompt } from '@/ai/travelPrompt'
 import { NextResponse } from 'next/server'
 import { createAmapClient, mcpClient } from '@/ai/amapMcp'
 import { withTimeout } from '@/lib/utils'
