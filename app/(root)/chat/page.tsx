@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-21 16:27:38
+ * @LastEditTime: 2025-04-30 17:58:23
  */
 'use client'
 
@@ -14,6 +14,7 @@ import type { MessageProps } from '@/interface/message.d.ts'
 import UserMessage from '@/components/UserMessage'
 import AssistantMessage from '@/components/AssistantMessage'
 import type { Chat } from '@/components/ChatList'
+import { isDrawingRequest } from '@/lib/utils'
 
 // 定义消息
 
@@ -25,6 +26,7 @@ export default function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([])
   const [listLoading, setListLoading] = useState(true)
   const [listError, setListError] = useState('')
+  const [respondType, setRespondType] = useState<'text' | 'image'>('text')
 
   // 添加滚动到底部的函数
   const scrollToBottom = () => {
@@ -40,6 +42,10 @@ export default function ChatPage() {
   const chatInputStatus = useMemo(() => {
     return status === 'loading' ? 'streaming' : 'ready'
   }, [status])
+
+  const messageType = useMemo(() => {
+    return respondType
+  }, [respondType])
 
   const fetchChats = useCallback(async () => {
     try {
@@ -104,6 +110,10 @@ export default function ChatPage() {
         // 更新状态
         setStatus('loading')
 
+        // 根据输入词判断是否要生成图片
+        const isDrawing = isDrawingRequest(inputValue)
+        setRespondType(isDrawing ? 'image' : 'text')
+
         // 生成唯一ID
         const messageId = Date.now().toString()
         const timestamp = new Date()
@@ -150,6 +160,7 @@ export default function ChatPage() {
           body: JSON.stringify({
             chatId: activeChat.id,
             messages: messageHistory,
+            respondType: respondType,
           }),
         })
 
@@ -157,22 +168,37 @@ export default function ChatPage() {
           throw new Error('发送消息失败')
         }
 
-        // 处理流式响应
-        const reader = response.body?.getReader()
-        if (reader) {
-          const decoder = new TextDecoder()
-          let responseText = ''
+        // 检查返回内容类型
+        const contentType = response.headers.get('content-type')
 
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
+        // 如果是JSON格式，可能包含图片数据
+        if (contentType && contentType.includes('image/webp')) {
+          const data = await response.json()
 
-            // 解码新的文本块
-            const chunk = decoder.decode(value, { stream: true })
-            responseText += chunk
+          // 如果返回了图片数据
+          if (data.image) {
+            console.log('data.image', data.image)
+            // 更新助手消息为图片
+            updateAssistantMessage(`![AI生成图片](data:image/png;base64,${data.image})`)
+          }
+        } else {
+          // 处理流式响应
+          const reader = response.body?.getReader()
+          if (reader) {
+            const decoder = new TextDecoder()
+            let responseText = ''
 
-            // 更新助手消息
-            updateAssistantMessage(responseText)
+            while (true) {
+              const { done, value } = await reader.read()
+              if (done) break
+
+              // 解码新的文本块
+              const chunk = decoder.decode(value, { stream: true })
+              responseText += chunk
+
+              // 更新助手消息
+              updateAssistantMessage(responseText)
+            }
           }
         }
       } catch (error) {
@@ -231,7 +257,13 @@ export default function ChatPage() {
             message.role === 'user' ? (
               <UserMessage key={message.id} {...message} message={message} />
             ) : (
-              <AssistantMessage key={message.id} {...message} message={message} status={chatInputStatus} />
+              <AssistantMessage
+                key={message.id}
+                {...message}
+                message={message}
+                status={chatInputStatus}
+                messageType={messageType}
+              />
             )
           )}
           {/* 添加一个空白的div作为滚动目标 */}

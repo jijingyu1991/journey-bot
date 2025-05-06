@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 14:45:12
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-14 14:08:21
+ * @LastEditTime: 2025-04-28 16:46:45
  */
 'use client'
 
@@ -16,7 +16,6 @@ interface ChatInputProps {
 
 const ChatInput: React.FC<ChatInputProps> = ({ inputValue, status, setInput, handleSubmit }) => {
   const handleSend = async () => {
-    console.log('send message', inputValue)
     handleSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>)
   }
 

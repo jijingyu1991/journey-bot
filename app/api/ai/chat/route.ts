@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 17:51:08
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-27 16:23:54
+ * @LastEditTime: 2025-04-30 17:09:13
  */
 import aiModel from '@/ai/aiModel'
 import { LanguageModelV1, streamText } from 'ai'

@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-14 11:27:51
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-27 16:48:29
+ * @LastEditTime: 2025-04-30 17:41:11
  */
 import { deepseek } from '@ai-sdk/deepseek'
 import { createOpenAI } from '@ai-sdk/openai'
@@ -23,7 +23,7 @@ if (AI_MODEL === 'deepseek') {
 export default aiModel
 
 // 绘图模型 生成svg行程图
-const DRAW_MODEL = process.env.AI_DRAW_MODEL
+const DRAW_MODEL: string = process.env.AI_DRAW_MODEL || ''
 let drawModel: unknown
 if (DRAW_MODEL === 'deepseek') {
   drawModel = deepseek('deepseek-chat')
@@ -35,6 +35,6 @@ if (DRAW_MODEL === 'deepseek') {
     baseURL: process.env.OPENAI_API_URL,
   })
   // 确保使用正确的图像模型
-  drawModel = openai.image('dall-e-3')
+  drawModel = openai.image(DRAW_MODEL)
 }
 export { drawModel }

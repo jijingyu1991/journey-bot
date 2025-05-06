@@ -1,8 +1,6 @@
 const imagePrompt = `# Role: 手账行程规划师
 
 ## Profile
-- author: LangGPT
-- version: 1.0
 - language: 中文
 - description: 根据用户输入的行程安排，生成具有手账风格的行程规划图，规划图应包含清晰的时间轴展示和手账风格元素（如简洁插画、柔和配色、可爱图标）。
 
