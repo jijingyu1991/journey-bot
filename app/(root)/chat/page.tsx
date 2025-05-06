@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-30 17:58:23
+ * @LastEditTime: 2025-05-06 15:39:18
  */
 'use client'
 
@@ -160,7 +160,7 @@ export default function ChatPage() {
           body: JSON.stringify({
             chatId: activeChat.id,
             messages: messageHistory,
-            respondType: respondType,
+            respondType: isDrawing ? 'image' : 'text',
           }),
         })
 
@@ -177,10 +177,12 @@ export default function ChatPage() {
 
           // 如果返回了图片数据
           if (data.image) {
-            console.log('data.image', data.image)
             // 更新助手消息为图片
             updateAssistantMessage(`![AI生成图片](data:image/png;base64,${data.image})`)
           }
+        } else if (contentType && contentType.includes('text/plain')) {
+          const data = await response.json()
+          updateAssistantMessage(data.content)
         } else {
           // 处理流式响应
           const reader = response.body?.getReader()

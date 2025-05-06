@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-27 13:34:06
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-30 18:02:00
+ * @LastEditTime: 2025-05-06 13:54:30
  */
 import React, { memo } from 'react'
 import { MessageProps } from '@/interface/message'
@@ -78,7 +78,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = memo(({ message, statu
     //     )
     //   }
     // }
-    if (messageType == 'image' && (status === 'streaming' || status === 'submitted')) {
+    if (messageType == 'image' && !content && (status === 'streaming' || status === 'submitted')) {
       return (
         <div className="flex flex-col items-center p-4 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg border border-teal-100 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
@@ -100,7 +100,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = memo(({ message, statu
     <Bubble
       className="mb-4 max-w-[90%]"
       placement="start"
-      loading={!content && (status === 'streaming' || status === 'submitted')}
+      loading={!content && (status === 'streaming' || status === 'submitted') && messageType != 'image'}
       content={content}
       messageRender={renderMarkdown}
       header={reasoning}

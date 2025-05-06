@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-16 18:00:00
+ * @LastEditTime: 2025-05-06 13:55:59
  */
 import { MongoClient, ServerApiVersion, CommandStartedEvent, CommandSucceededEvent, CommandFailedEvent } from 'mongodb'
 
@@ -68,7 +68,6 @@ if (process.env.NODE_ENV === 'development') {
       client.on('commandFailed', commandFailedLogger)
       console.log('MongoDB 调试模式已启用')
     }
-
     globalWithMongo._mongoClientPromise = client
       .connect()
       .then((client) => {
@@ -92,7 +91,7 @@ if (process.env.NODE_ENV === 'development') {
     client.on('commandFailed', commandFailedLogger)
     console.log('MongoDB 调试模式已启用')
   }
-
+  console.log(22222)
   clientPromise = client
     .connect()
     .then((client) => {

@@ -5,12 +5,12 @@ import { auth } from '@/auth'
 import { travelGeneratePrompt } from '@/ai/travelPrompt'
 import { addMessageToChatSession } from '@/lib/services/chatService'
 import { nanoid } from 'nanoid'
-import { generateChatTitle } from '@/lib/services/aiService'
+import { generateChatTitle } from '@/lib/services/textService'
 import { createAmapClient } from '@/ai/amapMcp'
 import { mcpClient } from '@/ai/amapMcp'
 import { withTimeout } from '@/lib/utils'
 import { createChat } from '@/lib/db/chats'
-import { drawImage } from '@/ai/generateImage'
+import { drawImage } from '@/lib/services/imageService'
 
 /*
  * @Date: 2025-04-18 10:27:00
@@ -25,6 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 })
     }
     const { messages, chatId: initialChatId, respondType } = await request.json()
+    console.log('respondType', respondType)
     const userId = session.user.id
     let chatId = initialChatId
     if (!chatId) {
@@ -40,16 +41,32 @@ export async function POST(request: Request) {
     generateChatTitle(chatId, messages)
 
     if (respondType === 'image') {
-      const image = await drawImage(userMessage.content)
-      if (image) {
+      const { type, content }: { type: string; content: string } = (await drawImage(messages)) || {
+        type: '',
+        content: '',
+      }
+      if (type === 'image') {
         // 保存模型响应到数据库
-        addMessageToChatSession(chatId, `![AI生成图片](data:image/png;base64,${image})`, 'assistant', nanoid())
+        addMessageToChatSession(chatId, `![AI生成图片](data:image/png;base64,${content})`, 'assistant', nanoid())
         return NextResponse.json(
-          { image },
+          { image: content },
           {
             status: 200,
             headers: {
               'Content-Type': 'image/webp',
+            },
+          }
+        )
+      } else if (type === 'text') {
+        addMessageToChatSession(chatId, content, 'assistant', nanoid())
+        return NextResponse.json(
+          {
+            content,
+          },
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'text/plain',
             },
           }
         )

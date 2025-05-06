@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16 11:27:31
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-17 10:46:34
+ * @LastEditTime: 2025-05-06 11:46:44
  */
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
