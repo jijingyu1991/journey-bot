@@ -7,7 +7,7 @@
 # Journey Bot 旅行机器人
 
 <div align="center">
-  <img src="./public/journey-map.png" alt="Journey Map" width="800" />
+  <img src="./public/image/journey-map.png" alt="Journey Map" width="800" />
 </div>
 
 ## 快速开始 | Getting Started
