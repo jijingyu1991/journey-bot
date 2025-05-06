@@ -1,7 +1,7 @@
 <!--
  * @Date: 2025-04-10 13:31:58
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 17:02:39
+ * @LastEditTime: 2025-05-06 17:25:49
 -->
 
 # Journey Bot 旅行机器人
@@ -19,6 +19,8 @@
 ```bash
 # 确保已安装Docker和Docker Compose | Make sure Docker and Docker Compose are installed
 ./start-db.sh
+启动doctor数据库
+pnpm start:server
 ```
 
 ### 开发服务器 | Development Server
