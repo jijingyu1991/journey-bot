@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-28
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-27 14:06:50
+ * @LastEditTime: 2025-05-09 15:36:49
  */
 
 import { svgPrompt } from './svgPrompt'
@@ -13,7 +13,7 @@ import { svgPrompt } from './svgPrompt'
  */
 export const isSvgFromResponse = (response: string): boolean => {
   // 查找以<svg开头并以</svg>结尾的内容
-  return response.match(/<svg[\s\S]/)
+  return response.match(/<svg[\s\S]/) !== null
 }
 /**
  * 从AI响应中提取SVG代码

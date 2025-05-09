@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-09 15:18:38
+ * @LastEditTime: 2025-05-09 16:04:59
  */
 
 import getMongoClient from '../mongodb'
@@ -45,6 +45,7 @@ export const db = {
           const result = {} as Partial<Chat>
           ;(Object.keys(select) as (keyof Chat)[]).forEach((key) => {
             if (select[key]) {
+              // @ts-expect-error 类型断言
               result[key] = chat[key as keyof Chat]
             }
           })

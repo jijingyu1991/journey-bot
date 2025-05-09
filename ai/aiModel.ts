@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-14 11:27:51
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-30 17:41:11
+ * @LastEditTime: 2025-05-09 15:35:41
  */
 import { deepseek } from '@ai-sdk/deepseek'
 import { createOpenAI } from '@ai-sdk/openai'
@@ -18,7 +18,7 @@ if (AI_MODEL === 'deepseek') {
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: process.env.OPENAI_API_URL,
   })
-  aiModel = openai(process.env.MODEL)
+  aiModel = openai(AI_MODEL)
 }
 export default aiModel
 

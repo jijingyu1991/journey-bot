@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-27 13:34:06
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-09 14:38:33
+ * @LastEditTime: 2025-05-09 15:54:42
  */
 import React, { memo } from 'react'
 import { MessageProps } from '@/interface/message'
@@ -22,7 +22,7 @@ const md = MarkdownIt({
 interface AssistantMessageProps extends MessageProps {
   message: MessageProps
   status: string
-  messageType: string
+  messageType?: string
 }
 
 const AssistantMessage: React.FC<AssistantMessageProps> = memo(({ message, status, messageType }) => {

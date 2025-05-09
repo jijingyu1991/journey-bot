@@ -1,13 +1,14 @@
 /*
  * @Date: 2025-04-30 16:52:52
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 16:11:12
+ * @LastEditTime: 2025-05-09 16:09:04
  */
 import { experimental_generateImage as generateImage, ImageModel } from 'ai'
 import { drawModel } from '../../ai/aiModel'
 import { MessageProps } from '@/interface/message'
 import { extractTravelInfo } from '@/lib/services/textService'
 import imagePrompt from '@/ai/imagePrompt'
+// @ts-expect-error 类型断言
 export const drawImage = async (messages: Array<MessageProps>): Promise<{ type: string; content: string } | null> => {
   const travelInfo = await extractTravelInfo(messages)
   console.log('travelInfo', travelInfo)

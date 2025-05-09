@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-10 13:31:58
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-30 17:44:26
+ * @LastEditTime: 2025-05-09 16:10:10
  */
 'use client'
 import { useChat } from '@ai-sdk/react'
@@ -39,8 +39,10 @@ const Home = () => {
       <div className="mt-10 mb-40">
         {messages.map((message) => {
           if (message.role === 'user') {
+            // @ts-expect-error UIMessage 可能包含 'data'，但这里只处理 'user'
             return <UserMessage key={message.id} message={message} />
           } else if (message.role === 'assistant') {
+            // @ts-expect-error UIMessage 可能包含 'data'，但这里只处理 'assistant'
             return <AssistantMessage key={message.id} message={message} status={status} />
           }
           return null
