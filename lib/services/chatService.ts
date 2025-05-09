@@ -1,9 +1,9 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-21 11:33:48
+ * @LastEditTime: 2025-05-09 15:19:37
  */
-import { createChat, getChatById, addMessageToChat } from '../db/chats'
+import { getChatById, addMessageToChat } from '../db/chats'
 import { MessageProps } from '@/interface/message'
 import { nanoid } from 'nanoid'
 import { Message } from '../db/chats/schema'

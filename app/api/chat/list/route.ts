@@ -1,9 +1,9 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-21 11:33:33
+ * @LastEditTime: 2025-05-09 14:38:10
  */
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { getChatsByUserId } from '@/lib/db/chats'
 

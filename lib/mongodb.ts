@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 13:55:59
+ * @LastEditTime: 2025-05-09 15:20:00
  */
 import { MongoClient, ServerApiVersion, CommandStartedEvent, CommandSucceededEvent, CommandFailedEvent } from 'mongodb'
 
@@ -91,7 +91,6 @@ if (process.env.NODE_ENV === 'development') {
     client.on('commandFailed', commandFailedLogger)
     console.log('MongoDB 调试模式已启用')
   }
-  console.log(22222)
   clientPromise = client
     .connect()
     .then((client) => {

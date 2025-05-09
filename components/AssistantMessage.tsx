@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-27 13:34:06
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 13:54:30
+ * @LastEditTime: 2025-05-09 14:38:33
  */
 import React, { memo } from 'react'
 import { MessageProps } from '@/interface/message'
@@ -9,8 +9,8 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Bubble } from '@ant-design/x'
 import type { BubbleProps } from '@ant-design/x'
 import MarkdownIt from 'markdown-it'
-import { extractSvgFromResponse, isSvgFromResponse } from '@/ai/svgHelper'
-import { Brush, Palette, Loader2, Image } from 'lucide-react'
+// import { extractSvgFromResponse, isSvgFromResponse } from '@/ai/svgHelper'
+import { Brush, Palette, Loader2 } from 'lucide-react' // Image
 
 const md = MarkdownIt({
   html: true,
