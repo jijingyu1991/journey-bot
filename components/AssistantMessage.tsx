@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-27 13:34:06
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-09 15:54:42
+ * @LastEditTime: 2025-05-12 17:16:44
  */
 import React, { memo } from 'react'
 import { MessageProps } from '@/interface/message'
@@ -25,75 +25,86 @@ interface AssistantMessageProps extends MessageProps {
   messageType?: string
 }
 
+const isAmapUri = (text: string) => text.startsWith('amapuri://') || text.startsWith('https://surl.amap.com/')
+
+const amapUriRegex = /(amapuri:\/\/[^\s\)\]\}，。；,;]*)/g
+const amapWebRegex = /(https:\/\/surl\.amap\.com\/[^\s\)\]\}，。；,;]*)/g
+
 const AssistantMessage: React.FC<AssistantMessageProps> = memo(({ message, status, messageType }) => {
   const { content, reasoning } = message
 
   const renderMarkdown: BubbleProps['messageRender'] = (content) => {
-    // if (!content) return null
+    if (!content) return null
 
-    // // 检查是否为图片Markdown格式
-    // if (content.startsWith('![') && content.includes('](data:image/')) {
-    //   // 提取base64图片
-    //   const base64Match = content.match(/\]\((data:image\/[^)]+)\)/)
-    //   if (base64Match && base64Match[1]) {
-    //     return (
-    //       <div className="my-2">
-    //         <div className="rounded-lg overflow-hidden shadow-md">
-    //           <img src={base64Match[1]} alt="AI生成图片" className="max-w-full h-auto" />
-    //         </div>
-    //         <div className="mt-2 text-xs text-teal-600 flex items-center">
-    //           <Image size={12} className="mr-1" /> AI生成图片
-    //         </div>
-    //       </div>
-    //     )
-    //   }
-    // }
+    // 提取所有高德地图专属链接
+    const amapUris = [...content.matchAll(amapUriRegex)].map((m) => m[0])
+    const amapWebs = [...content.matchAll(amapWebRegex)].map((m) => m[0])
 
-    // if (isSvgFromResponse(content)) {
-    //   // 使用svgHelper提取SVG
-    //   const svgContent = extractSvgFromResponse(content)
+    // 去重
+    const amapLinks = Array.from(new Set([...amapUris, ...amapWebs]))
 
-    //   if (svgContent) {
-    //     // 分离XML代码和其他文本内容
-    //     const textContent = content.replace(/<svg[\s\S]*?<\/svg>/, '').trim()
+    // 替换链接为占位符，避免 markdown 渲染时自动转为 a 标签
+    let pureContent = content
+    amapLinks.forEach((link, idx) => {
+      pureContent = pureContent.replace(link, `[[AMAP_LINK_${idx}]]`)
+    })
 
-    //     return (
-    //       <div>
-    //         {textContent && <div dangerouslySetInnerHTML={{ __html: md.render(textContent) }} />}
-    //         <div className="svg-container" dangerouslySetInnerHTML={{ __html: svgContent }} />
-    //       </div>
-    //     )
-    //   } else {
-    //     // 优化后的绘制中加载状态
-    //     return (
-    //       <div className="flex flex-col items-center p-4 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg border border-teal-100 shadow-sm">
-    //         <div className="flex items-center gap-3 mb-2">
-    //           <Palette className="text-teal-500 animate-pulse" size={24} />
-    //           <Loader2 className="text-blue-500 animate-spin" size={20} />
-    //           <Brush className="text-teal-600 animate-bounce" size={22} />
-    //         </div>
-    //         <div className="text-teal-700 font-medium">正在绘制图形中...</div>
-    //         <div className="text-xs text-teal-500 mt-1">请稍候，我们正在为您创建精美的图形</div>
-    //       </div>
-    //     )
-    //   }
-    // }
-    if (messageType == 'image' && !content && (status === 'streaming' || status === 'submitted')) {
-      return (
-        <div className="flex flex-col items-center p-4 bg-gradient-to-r from-blue-50 to-teal-50 rounded-lg border border-teal-100 shadow-sm">
-          <div className="flex items-center gap-3 mb-2">
-            <Palette className="text-teal-500 animate-pulse" size={24} />
-            <Loader2 className="text-blue-500 animate-spin" size={20} />
-            <Brush className="text-teal-600 animate-bounce" size={22} />
+    // 渲染主内容
+    const rendered = <div dangerouslySetInnerHTML={{ __html: md.render(pureContent) }} />
+
+    // 渲染所有专属地图卡片
+    const amapCards = amapLinks.map((link, idx) => {
+      if (link.startsWith('amapuri://')) {
+        return (
+          <div
+            key={link}
+            className="my-4 p-5 bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl shadow-md border border-teal-100"
+          >
+            <div className="text-teal-700 font-semibold text-base mb-2">专属高德地图</div>
+            <div className="text-sm text-teal-500 mb-3">请在手机端高德地图App中打开：</div>
+            <a
+              href={link}
+              className="inline-block bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg px-4 py-2 transition"
+            >
+              打开高德地图App
+            </a>
           </div>
-          <div className="text-teal-700 font-medium">正在绘制图形中...</div>
-          <div className="text-xs text-teal-500 mt-1">请稍候，我们正在为您创建精美的图形</div>
-        </div>
-      )
-    } else {
-      // 普通Markdown内容
-      return <div dangerouslySetInnerHTML={{ __html: md.render(content) }} />
-    }
+        )
+      } else if (link.startsWith('https://surl.amap.com/')) {
+        return (
+          <div
+            key={link}
+            className="my-4 p-5 bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl shadow-md border border-teal-100"
+          >
+            <div className="text-teal-700 font-semibold text-base mb-2">专属高德地图</div>
+            <iframe
+              src={link}
+              className="w-full h-80 rounded-lg border border-teal-100"
+              title="高德专属地图"
+              allowFullScreen
+            />
+            <div className="mt-3">
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg px-4 py-2 transition"
+              >
+                在新窗口中打开
+              </a>
+            </div>
+          </div>
+        )
+      }
+      return null
+    })
+
+    return (
+      <div>
+        {rendered}
+        {amapCards}
+      </div>
+    )
   }
 
   return (
