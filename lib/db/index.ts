@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-09 16:04:59
+ * @LastEditTime: 2025-05-12 16:53:24
  */
 
 import getMongoClient from '../mongodb'
@@ -98,7 +98,7 @@ export { ChatSchema, UserSchema }
 function mapChatFromDb(doc: WithId<Document>): Chat {
   return {
     id: typeof doc.id === 'string' ? doc.id : doc._id?.toString?.() ?? '',
-    userId: doc.userId as number,
+    userId: doc.userId as string,
     title: doc.title as string,
     createdAt: new Date(doc.createdAt),
     updatedAt: new Date(doc.updatedAt),
