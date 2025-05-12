@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-18 15:43:33
+ * @LastEditTime: 2025-05-12 16:00:49
  */
 import { Collection, Db } from 'mongodb'
 import clientPromise from '../../mongodb'
@@ -16,9 +16,8 @@ export async function getChatsCollection(): Promise<Collection<Chat>> {
 }
 
 // 创建新的聊天会话
-export async function createChat(userId: number, title?: string): Promise<Chat> {
+export async function createChat(userId: string, title?: string): Promise<Chat> {
   const chatsCollection = await getChatsCollection()
-
   const now = new Date()
   const chat: Chat = {
     id: nanoid(), // 生成唯一ID
@@ -35,7 +34,7 @@ export async function createChat(userId: number, title?: string): Promise<Chat> 
 }
 
 // 获取用户的所有聊天
-export async function getChatsByUserId(userId: number): Promise<Chat[]> {
+export async function getChatsByUserId(userId: string): Promise<Chat[]> {
   const chatsCollection = await getChatsCollection()
   const chats = await chatsCollection.find({ userId, isArchived: false }).sort({ updatedAt: -1 }).toArray()
   return chats

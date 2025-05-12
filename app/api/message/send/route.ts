@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const userId = session.user.id
     let chatId = initialChatId
     if (!chatId) {
-      const { id } = await createChat(Number(userId))
+      const { id } = await createChat(userId)
       chatId = id
     }
     // 保存用户消息到数据库

@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-21 11:40:42
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 16:00:59
+ * @LastEditTime: 2025-05-12 16:21:56
  */
 import { getChatById, updateChat } from '@/lib/db/chats'
 import type { MessageProps } from '@/interface/message.d.ts'

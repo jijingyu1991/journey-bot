@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-06 15:39:18
+ * @LastEditTime: 2025-05-12 16:46:05
  */
 'use client'
 
@@ -252,7 +252,7 @@ export default function ChatPage() {
       </div>
 
       {/* 右侧消息区域 */}
-      <div className="flex-1 flex flex-col relative">
+      <div className="flex-1 flex flex-col relative pt-10">
         {/* 消息列表 */}
         <div className="flex-1 overflow-y-auto p-4 mb-20">
           {messages.map((message) =>

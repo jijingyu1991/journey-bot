@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-16
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-21 11:37:13
+ * @LastEditTime: 2025-05-12 15:58:24
  */
 import { z } from 'zod'
 
@@ -20,7 +20,7 @@ export type Message = z.infer<typeof MessageSchema>
 // 定义聊天数据表结构
 export const ChatSchema = z.object({
   id: z.string(), // 聊天的唯一ID
-  userId: z.number(), // 关联的用户ID
+  userId: z.string(), // 关联的用户ID
   title: z.string(), // 聊天标题，可选
   createdAt: z.date(), // 创建时间
   updatedAt: z.date(), // 更新时间

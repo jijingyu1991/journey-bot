@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17 14:09:33
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-27 10:07:52
+ * @LastEditTime: 2025-05-12 16:18:54
  */
 import React, { memo } from 'react'
 import { format } from 'date-fns'
@@ -100,7 +100,7 @@ const ChatList: React.FC<ChatListProps> = memo(({ chats, loading, error, fetchCh
         ))
       )}
       <Button
-        className="absolute bottom-4 right-4 bg-teal-500 hover:bg-teal-600 text-white shadow-md hover:shadow-lg transition-all rounded-full px-4"
+        className="fixed bottom-4 left-4 bg-teal-500 hover:bg-teal-600 text-white shadow-md hover:shadow-lg transition-all rounded-full px-4"
         onClick={createNewChat}
       >
         <PlusIcon className="mr-1" size={18} /> 新建会话

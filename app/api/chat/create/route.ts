@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17 15:09:10
  * @LastEditors: guantingting
- * @LastEditTime: 2025-04-21 16:23:39
+ * @LastEditTime: 2025-05-12 16:00:43
  */
 import { NextResponse } from 'next/server'
 import { createChat } from '@/lib/db/chats'
@@ -18,13 +18,12 @@ export async function POST() {
 
     // 从会话中获取用户ID
     const userId = session.user.id
-    console.log('新建', userId)
     if (!userId) {
       return NextResponse.json({ error: '用户ID不存在' }, { status: 400 })
     }
 
     // 创建新的聊天会话
-    const { id } = await createChat(Number(userId))
+    const { id } = await createChat(userId)
 
     return NextResponse.json({ chatId: id }, { status: 201 })
   } catch (error) {

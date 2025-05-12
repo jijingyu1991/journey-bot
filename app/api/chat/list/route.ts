@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-09 14:38:10
+ * @LastEditTime: 2025-05-12 16:00:26
  */
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
@@ -12,16 +12,16 @@ export async function GET() {
   try {
     const session = await auth()
 
+    console.log('session', session)
     // 验证用户是否已登录
     if (!session || !session.user) {
       return NextResponse.json([])
     }
 
     const userId = session.user.id
-    console.log('查询', userId)
 
     // 从数据库获取该用户的聊天列表
-    const chats = await getChatsByUserId(Number(userId))
+    const chats = await getChatsByUserId(userId)
 
     return NextResponse.json(chats)
   } catch (error) {
