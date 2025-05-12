@@ -1,7 +1,7 @@
 /*
  * @Date: 2025-04-17
  * @LastEditors: guantingting
- * @LastEditTime: 2025-05-12 16:46:05
+ * @LastEditTime: 2025-05-12 17:27:12
  */
 'use client'
 
@@ -206,6 +206,18 @@ export default function ChatPage() {
       } catch (error) {
         console.error('消息处理错误:', error)
         setStatus('error')
+        // 新增：接口失败时，助手消息显示网络繁忙
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `assistant-error-${Date.now()}`,
+            chatId: activeChat?.id,
+            role: 'assistant',
+            content: '网络繁忙，请稍后再试',
+            revisionId: `rev-error-${Date.now()}`,
+            createdAt: new Date(),
+          },
+        ])
       } finally {
         console.log('find')
         setStatus('idle')
